@@ -1,4 +1,4 @@
-<div class="list-block cards-list inset">
+{% pagelet $id="list" class="list-block cards-list inset" %}
     {% for val in list %}
     <div class="card demo-card-header-pic">
         <a href="/blog/{{val.id}}"  data-pagelets="layout">
@@ -12,16 +12,13 @@
                     <p>{{ val.summary|striptags }}</p>
                 </div>
             </div>
-            <!--<div class="card-footer">-->
-            <!--<a href="#" class="link">Like</a>-->
-            <!--<a href="#" class="link">Comment</a>-->
-            <!--<a href="#" class="link">Share</a>-->
-            <!--</div>-->
         </a>
     </div>
     {% endfor %}
-</div>
+{% endpagelet %}
+
+{% require $id='loading' %}
+
 {% script %}
-    {{JSON.stringify(list)}}
     require('./list.js');
 {% endscript %}
