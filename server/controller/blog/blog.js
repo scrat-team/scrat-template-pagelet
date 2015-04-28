@@ -79,5 +79,5 @@ router.get('/:id', function(req, res, next){
 
 
 function replaceImage(url){
-  return  url && url.replace(/^http:\/\/pic\d+\.zhimg.com\/(.*)$/, '/blog/img/$1');
+  return  url && url.replace(/http:\/\/pic\d+\.zhimg.com\/(.*)/g, '/blog/img/$1');
 }
