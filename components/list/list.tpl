@@ -1,17 +1,14 @@
-<div class="list-block cards-list">
-    <ul>
+<div class="list-block cards-list inset">
     {% for val in list %}
-    <li class="card">
+    <div class="card demo-card-header-pic">
         <a href="/blog/{{val.id}}"  data-pagelets="layout">
-            <div class="card-header">
-                <div class="facebook-avatar"></div>
-                <div class="facebook-name">{{val.title}}</div>
-                <div class="facebook-date">{{val.publishedTime|date('Y-m-d')}}</div>
+            <div style="background-image:url({{val.imgUrl}})" valign="bottom" class="card-header color-white no-border">
+                {{val.title}}
             </div>
             <div class="card-content">
                 <div class="card-content-inner">
-                    <img src="{{val.imgUrl}}">
-                    {{ val.summary|striptags }}
+                    <p class="color-gray">{{val.publishedTime|date('Y-m-d')}}</p>
+                    <p>{{ val.summary|safe }}</p>
                 </div>
             </div>
             <!--<div class="card-footer">-->
@@ -20,9 +17,8 @@
             <!--<a href="#" class="link">Share</a>-->
             <!--</div>-->
         </a>
-    </li>
+    </div>
     {% endfor %}
-    </ul>
 </div>
 {% script %}
     {{JSON.stringify(list)}}
