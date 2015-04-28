@@ -1,9 +1,12 @@
+require("../utils/img-lazyload/img-lazyload.js");
+
 loading_lock = false;
 loaded_page = 1;
 
-$(".page-content").on("scroll", function(evt){
-  var total_height = evt.target.scrollHeight
-  var scroll_height = evt.target.scrollTop
+pagelet.on("scroll", function(){
+  var target = $(".page-content")[0];
+  var total_height = target.scrollHeight
+  var scroll_height = target.scrollTop
   var screen_height = window.innerHeight
   var nearBottom = screen_height + scroll_height >= total_height - 50; //50换缓冲
 
@@ -21,6 +24,10 @@ $(".page-content").on("scroll", function(evt){
         loading_lock = false;
         $(".cards-list").append(data.html["layout.main.list"]);
         $(".infinite-scroll-preloader").hide();
+
+        var script = data.script.join("");
+        console.error(script);
+        script && eval(data.script.join(""));
 
         done();
       }

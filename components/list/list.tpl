@@ -2,9 +2,7 @@
     {% for val in list %}
     <div class="card demo-card-header-pic">
         <a href="/blog/{{val.id}}"  data-pagelets="layout">
-            <div style="background-image:url({{val.imgUrl}})" valign="bottom" class="card-header color-white no-border">
-
-            </div>
+            <div valign="bottom" class="card-header color-white no-border" lazyload-src="{{val.imgUrl}}"></div>
             <div class="card-content">
                 <div class="card-content-inner">
                     <h4>{{val.title}}</h4>
@@ -18,7 +16,6 @@
 {% endpagelet %}
 
 {% require $id='loading' %}
-
 {% script %}
     require('./list.js');
 {% endscript %}

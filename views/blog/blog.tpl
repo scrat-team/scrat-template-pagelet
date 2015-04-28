@@ -12,4 +12,5 @@
     </div>
 </div>
 {% require $id='./blog.css' %}
+{% require $id='./blog.js' %}
 {% endblock %}
