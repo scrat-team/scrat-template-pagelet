@@ -11,7 +11,7 @@ router.get('/', function(req, res, next){
     url: 'http://zhuanlan.zhihu.com/api/columns/zuimei/posts',
     qs: {
       limit: 10,
-      offset: (req.params.page || 0) * 10
+      offset: (req.query.page || 0) * 10
     },
     json: true
   }, function(err, response, body){
