@@ -2,7 +2,7 @@
     <ul>
     {% for val in list %}
     <li>
-        <a href="/blog/detail/{{val.id}}" class="item-link item-content">
+        <a href="/blog/{{val.id}}" class="item-link item-content" data-pagelets="layout">
             <div class="item-media"><img src="{{val.imgUrl}}" width="44" height="44"></div>
             <div class="item-inner">
                 <div class="item-title-row">

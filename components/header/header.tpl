@@ -1,12 +1,14 @@
 <div class="navbar">
   <div class="navbar-inner">
+    {% if id %}
     <div class="left">
-      <a href="#" class="link">
+      <a href="/blog" class="link" data-pagelets="layout">
         <i class="icon icon-back"></i>
         <span>返回</span>
       </a>
     </div>
-    <div class="center">{{ title }}</div>
+    {% endif %}
+    <div class="center">{{ name }}</div>
     <div class="right">
       <a href="#" class="link">
         <i class="icon icon-bars"></i>

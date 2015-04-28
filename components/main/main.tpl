@@ -5,9 +5,7 @@
     <div class="index-list">
       {% require $id='list' %}
     </div>
-  {% elseif detail %}
-    {% pagelet $id="detail" class="index-detail" %}
-      {% require $id='detail' %}
-    {% endpagelet %}
+  {% elseif id %}
+    {% require $id='detail' %}
   {% endif %}
 {% endpagelet %}

@@ -33,7 +33,7 @@ router.get('/', function(req, res, next){
         })
       };
       console.log(data.list[0])
-      res.render('blog/list', data);
+      res.render('blog/blog', data);
     }
   });
 });
@@ -72,7 +72,7 @@ router.get('/:id', function(req, res, next){
           }
         }
       };
-      res.render('blog/list', data);
+      res.render('blog/blog', data);
     }
   });
 });
