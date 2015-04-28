@@ -1,19 +1,23 @@
-<div class="list-block media-list inset">
+<div class="list-block cards-list">
     <ul>
     {% for val in list %}
-    <li>
-        <a href="/blog/{{val.id}}" class="item-link item-content" data-pagelets="layout">
-            <div class="item-media"><img src="{{val.imgUrl}}" width="44" height="44"></div>
-            <div class="item-inner">
-                <div class="item-title-row">
-                    <div class="item-title">{{val.title}}</div>
-                    <div class="item-after">{{val.publishedTime|date('Y-m-d')}}</div>
-                </div>
-                <!--<div class="item-subtitle">New messages from John Doe</div>-->
-                <div class="item-text">
+    <li class="card">
+        <a href="/blog/{{val.id}}"  data-pagelets="layout">
+            <div class="card-header">
+                <div class="facebook-avatar"><img src="{{val.imgUrl}}" width="34" ></div>
+                <div class="facebook-name">{{val.title}}</div>
+                <div class="facebook-date">{{val.publishedTime|date('Y-m-d')}}</div>
+            </div>
+            <div class="card-content">
+                <div class="card-content-inner">
                     {{ val.summary|safe }}
                 </div>
             </div>
+            <!--<div class="card-footer">-->
+            <!--<a href="#" class="link">Like</a>-->
+            <!--<a href="#" class="link">Comment</a>-->
+            <!--<a href="#" class="link">Share</a>-->
+            <!--</div>-->
         </a>
     </li>
     {% endfor %}
