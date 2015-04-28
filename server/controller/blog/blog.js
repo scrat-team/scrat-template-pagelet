@@ -18,7 +18,7 @@ router.get('/', function(req, res, next){
     if(err){
       next(err);
     }else if(response.statusCode !== 200){
-      res.status(response.statusCode).end();
+      res.status(response.statusCode).end(body);
     }else {
       var data = {
         name: body[0].column.name,
@@ -32,7 +32,6 @@ router.get('/', function(req, res, next){
           }
         })
       };
-      console.log(data.list[0])
       res.render('blog/blog', data);
     }
   });
@@ -52,7 +51,7 @@ router.get('/:id', function(req, res, next){
     if(err){
       next(err);
     }else if(response.statusCode !== 200){
-      res.status(response.statusCode).end();
+      res.status(response.statusCode).end(body);
     }else {
       var meta = body.meta;
       var data = {

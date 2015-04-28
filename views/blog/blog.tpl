@@ -3,7 +3,6 @@
 <div class="views">
     <div class="view view-main">
         <div class="pages">
-
             <div class="page navbar-fixed navbar-through">
                 {% require $id='header' %}
                 {% require $id='main' %}
