@@ -263,6 +263,19 @@
         historyMap[to + MAP_CONCATOR + from] = pagelets;
     }
 
+    function animation(dom, html, mode) {
+        if (mode == "none") {
+            dom.innerHTML = html;
+        }
+        else {
+            var children = $(dom).children();
+            $(html).appendTo($(dom))[mode]("250", function(){
+                $(children).remove();
+                children = null;
+            });
+        }
+    }
+
     var xhr, state,
         listeners = {},
         routers = [],
@@ -617,6 +630,7 @@
                     var pagelets = target.getAttribute('data-pagelets');
                     var mode = (target.getAttribute('data-insert-type') || 'replace').toLocaleLowerCase();
                     var href = target.getAttribute('href');
+                    var ani = target.getAttribute("data-animation") || "none";
                     pagelets = (pagelets || '').split(/\s*,\s*/).filter(filter);
                     if (href && pagelets.length > 0) {
                         e.preventDefault();
@@ -650,7 +664,8 @@
                                                     dom.insertBefore(fragment, dom.childNodes[0]);
                                                 }
                                             } else {
-                                                dom.innerHTML = html[key];
+                                                //dom.innerHTML = html[key];
+                                                animation(dom, html[key], ani);
                                             }
                                             dom = null;
                                         } else {

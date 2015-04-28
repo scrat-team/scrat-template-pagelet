@@ -2,7 +2,7 @@
   <div class="navbar-inner">
     {% if id %}
     <div class="left">
-      <a href="javascript:history.back();" class="link" data-pagelets="layout" ><!-- data-insert-type="replace" -->
+      <a href="/blog" class="link" data-pagelets="layout.page" data-insert-type="replace" data-animation="slideRight"><!-- data-insert-type="replace" -->
         <i class="icon icon-back"></i>
         <span>返回</span>
       </a>

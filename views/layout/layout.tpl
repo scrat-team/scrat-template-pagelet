@@ -20,6 +20,8 @@
         {% require $id="./layout.css" %}
         {% require $id="../lib/f7/framework7.css" %}
         {% require $id="../lib/zepto.js" %}
+        {% require $id="../lib/zepto-fx.js" %}
+        {% require $id="../lib/zepto-fx-methods.js" %}
         {% require $id="../lib/pagelet.js" %}
         {% require $id="../lib/md.js" %}
         {# 页面中执行的脚本 #}

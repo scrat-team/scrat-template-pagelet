@@ -1,7 +1,7 @@
 {% pagelet $id="list" class="list-block cards-list inset" %}
     {% for val in list %}
     <div class="card demo-card-header-pic">
-        <a href="/blog/{{val.id}}"  data-pagelets="layout">
+        <a href="/blog/{{val.id}}"  data-pagelets="layout.page" data-animation="slideLeft">
             <div valign="bottom" class="card-header color-white no-border" lazyload-src="{{val.imgUrl}}"></div>
             <div class="card-content">
                 <div class="card-content-inner">
