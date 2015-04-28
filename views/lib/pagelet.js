@@ -269,7 +269,7 @@
         }
         else {
             var children = $(dom).children();
-            $(html).appendTo($(dom))[mode]("250", function(){
+            $(html).appendTo($(dom))[mode]("400", function(){
                 $(children).remove();
                 children = null;
             });
