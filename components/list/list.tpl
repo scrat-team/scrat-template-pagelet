@@ -1,19 +1,25 @@
-<div class="list pure-u-1">
+<div class="list-block media-list inset">
+    <ul>
     {% for val in list %}
-    <a href="/{{ nav.current }}?detail={{ val._id }}" data-pagelets="layout.main.detail">
-        <div class="email-item email-item-{{ val.status }} pure-g" data-id="{{ val._id }}">
-            <div class="pure-u">
-                <img class="email-avatar" alt="Tilo Mitra's avatar" height="64" width="64" src="{{ val.avatar }}">
+    <li>
+        <a href="/blog/detail/{{val.id}}" class="item-link item-content">
+            <div class="item-media"><img src="{{val.imgUrl}}" width="44" height="44"></div>
+            <div class="item-inner">
+                <div class="item-title-row">
+                    <div class="item-title">{{val.title}}</div>
+                    <div class="item-after">{{val.publishedTime}}</div>
+                </div>
+                <!--<div class="item-subtitle">New messages from John Doe</div>-->
+                <div class="item-text">
+                    {{ val.summary|safe }}
+                </div>
             </div>
-            <div class="pure-u-3-4">
-                <h5 class="email-name">{{ val.name }}</h5>
-                <h4 class="email-subject">{{ val.subject }}</h4>
-                <p class="email-desc">{{ val.desc }}</p>
-            </div>
-        </div>
-    </a>
+        </a>
+    </li>
     {% endfor %}
+    </ul>
 </div>
 {% script %}
+    {{JSON.stringify(list)}}
     require('./list.js');
 {% endscript %}

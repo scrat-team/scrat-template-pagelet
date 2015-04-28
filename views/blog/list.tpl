@@ -1,19 +1,19 @@
 {% extends '../layout/layout.tpl' %}
 {% block body %}
-    <div class="index-nav">
-        {% require $id='nav' %}
-    </div>
-    {% pagelet $id="main" class="index-main" %}
-        {% if page404 %}
-            {% require $id='404' %}
-        {% elseif list %}
-            <div class="index-list">
-                {% require $id='list' %}
+<div class="views">
+    <div class="view view-main">
+        <div class="pages">
+
+            <div class="page navbar-fixed navbar-through">
+                {% require $id='header' %}
+
+                {% require $id='main' %}
+
+                {% require $id='footer' %}
             </div>
-            {% pagelet $id="detail" class="index-detail" %}
-                {% require $id='detail' %}
-            {% endpagelet %}
-        {% endif %}
-    {% endpagelet %}
-    {% require $id='./zhuanlan.css' %}
+        </div>
+    </div>
+</div>
+
+{% require $id='./zhuanlan.css' %}
 {% endblock %}
