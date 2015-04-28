@@ -4,13 +4,14 @@
     <li class="card">
         <a href="/blog/{{val.id}}"  data-pagelets="layout">
             <div class="card-header">
-                <div class="facebook-avatar"><img src="{{val.imgUrl}}" width="34" ></div>
+                <div class="facebook-avatar"></div>
                 <div class="facebook-name">{{val.title}}</div>
                 <div class="facebook-date">{{val.publishedTime|date('Y-m-d')}}</div>
             </div>
             <div class="card-content">
                 <div class="card-content-inner">
-                    {{ val.summary|safe }}
+                    <img src="{{val.imgUrl}}">
+                    {{ val.summary|striptags }}
                 </div>
             </div>
             <!--<div class="card-footer">-->
