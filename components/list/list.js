@@ -25,10 +25,6 @@ pagelet.on("scroll", function(){
         $(".cards-list").append(data.html["layout.main.list"]);
         $(".infinite-scroll-preloader").hide();
 
-        var script = data.script.join("");
-        console.error(script);
-        script && eval(data.script.join(""));
-
         done();
       }
     });
