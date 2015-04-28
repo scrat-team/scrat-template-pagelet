@@ -18,6 +18,7 @@
         {% title %}{{title}}{% endtitle%}
         {# 引用模块 #}
         {% require $id="./layout.css" %}
+        {% require $id="../lib/f7/framework7.css" %}
         {% require $id="../lib/zepto.js" %}
         {% require $id="../lib/pagelet.js" %}
         {% require $id="../lib/md.js" %}
