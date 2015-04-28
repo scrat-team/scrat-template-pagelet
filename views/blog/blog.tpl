@@ -6,14 +6,10 @@
 
             <div class="page navbar-fixed navbar-through">
                 {% require $id='header' %}
-
                 {% require $id='main' %}
-
                 {% require $id='footer' %}
             </div>
         </div>
     </div>
 </div>
-
-{% require $id='./zhuanlan.css' %}
 {% endblock %}

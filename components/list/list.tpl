@@ -7,7 +7,7 @@
             <div class="item-inner">
                 <div class="item-title-row">
                     <div class="item-title">{{val.title}}</div>
-                    <div class="item-after">{{val.publishedTime}}</div>
+                    <div class="item-after">{{val.publishedTime|date('Y-m-d')}}</div>
                 </div>
                 <!--<div class="item-subtitle">New messages from John Doe</div>-->
                 <div class="item-text">
