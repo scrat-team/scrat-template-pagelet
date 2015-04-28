@@ -8,7 +8,7 @@
             <div class="card-content">
                 <div class="card-content-inner">
                     <p class="color-gray">{{val.publishedTime|date('Y-m-d')}}</p>
-                    <p>{{ val.summary|safe }}</p>
+                    <p>{{ val.summary|striptags }}</p>
                 </div>
             </div>
             <!--<div class="card-footer">-->
