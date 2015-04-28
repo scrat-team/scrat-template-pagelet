@@ -32,6 +32,7 @@ router.get('/', function(req, res, next){
           }
         })
       };
+      res.locals.title = data.name;
       res.render('blog/blog', data);
     }
   });
@@ -71,6 +72,7 @@ router.get('/:id', function(req, res, next){
           }
         }
       };
+      res.locals.title = data.name;
       res.render('blog/blog', data);
     }
   });
