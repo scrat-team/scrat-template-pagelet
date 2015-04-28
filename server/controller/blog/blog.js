@@ -26,15 +26,22 @@ router.get('/', function(req, res, next){
           return {
             id: item.slug,
             title: item.title,
-            imgUrl: item.titleImage,
+            imgUrl: replaceImage(item.titleImage),
             publishedTime: item.publishedTime,
-            summary: item.summary
+            summary: replaceImage(item.summary)
           }
         })
       };
+      console.log(data.list[0])
       res.render('blog/list', data);
     }
   });
+});
+
+router.get('/img/:id', function(req, res, next){
+  request({
+    url: 'http://pic1.zhimg.com/' + req.params.id
+  }).pipe(res);
 });
 
 router.get('/:id', function(req, res, next){
@@ -51,10 +58,9 @@ router.get('/:id', function(req, res, next){
       var data = {
         id: body.slug,
         name: body.title,
-        imgUrl: body.titleImage,
+        imgUrl: replaceImage(body.titleImage),
         publishedTime: body.publishedTime,
-        summary: body.summary,
-        content: body.content,
+        content: replaceImage(body.content),
         links: {
           next: meta.next && {
             name: meta.next.title,
@@ -70,3 +76,8 @@ router.get('/:id', function(req, res, next){
     }
   });
 });
+
+
+function replaceImage(url){
+  return  url && url.replace(/^http:\/\/pic\d+\.zhimg.com\/(.*)$/, '/blog/img/$1');
+}
