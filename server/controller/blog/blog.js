@@ -30,6 +30,7 @@ router.get('/:id', function(req, res, next){
   for(var i = 0,len=testData.length; i<len; i++){
     if(testData[i].id == id){
       data = testData[i];
+      data.name = data.title;
       break;
     }
   }
@@ -37,6 +38,7 @@ router.get('/:id', function(req, res, next){
     res.locals.title = data.name;
     res.render('blog/blog', data);
   }else{
+    res.locals.title = '最美应用 | 有价值的好应用';
     res.status(404).send('No Found blog id=' + id);
   }
 });
