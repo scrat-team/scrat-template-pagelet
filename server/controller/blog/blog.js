@@ -43,6 +43,6 @@ router.get('/:id', function(req, res, next){
 
 router.get('/img/:id', function(req, res, next){
   request({
-    url: 'http://pic1.zhimg.com/' + req.params.id
+    url: 'http://pic' + (Math.floor(Math.random()*10) % 3 +1) + '.zhimg.com/' + req.params.id
   }).pipe(res);
 });
