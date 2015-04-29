@@ -617,6 +617,7 @@
                     var pagelets = target.getAttribute('data-pagelets');
                     var mode = (target.getAttribute('data-insert-type') || 'replace').toLocaleLowerCase();
                     var href = target.getAttribute('href');
+                    var animation = target.getAttribute('data-animation');
                     pagelets = (pagelets || '').split(/\s*,\s*/).filter(filter);
                     if (href && pagelets.length > 0) {
                         e.preventDefault();
@@ -625,6 +626,7 @@
                         opt.url = href;
                         opt.pagelets = pagelets;
                         opt.replace = mode === 'prepend' || mode === 'append';
+                        opt.animation = animation || 'none';
                         opt.error = function(){
                             location.replace(href);
                         };

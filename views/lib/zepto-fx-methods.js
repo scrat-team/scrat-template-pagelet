@@ -69,7 +69,8 @@
   }
 
   $.fn.slideLeft = function(speed, callback){
-    if (speed === undefined) speed = 0
+    if (speed === undefined) speed = 0;
+
     this.css({
       "left" : "50%",
       "opacity" : 0
@@ -78,7 +79,8 @@
   }
 
   $.fn.slideRight = function(speed, callback){
-      if (speed === undefined) speed = 0
+      if (speed === undefined) speed = 0;
+
       this.css({
         "left" : "-50%",
         "opacity" : 0

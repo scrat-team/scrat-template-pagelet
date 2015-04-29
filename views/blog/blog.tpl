@@ -2,7 +2,7 @@
 {% block body %}
 <div class="views">
     <div class="view view-main">
-        {% pagelet $id="page" class="pages" %}
+        {% pagelet $id="page" class="pages" data-pagelet-id="layout.page"%}
             <div class="page navbar-fixed navbar-through">
                 {% require $id='header' %}
                 {% require $id='main' %}

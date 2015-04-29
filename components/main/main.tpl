@@ -1,4 +1,4 @@
-{% pagelet $id="main" class="page-content index-main" %}
+{% pagelet $id="main" class="page-content index-main"  data-pagelet-id="layout.page.main"%}
   {% if page404 %}
     {% require $id='404' %}
   {% elseif list %}

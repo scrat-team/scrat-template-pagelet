@@ -31,7 +31,7 @@
         {% endscript %}
     {% endhead %}
     {% body %}
-        {% pagelet $id="layout" class="layout" %} {# 最外层pagelet #}
+        {% pagelet $id="layout" class="layout" data-pagelet-id="layout"%} {# 最外层pagelet #}
             {% block body %}{# 用于继承的block区域 #}{% endblock %}
         {% endpagelet %}
         {% require $id='progress' %}
