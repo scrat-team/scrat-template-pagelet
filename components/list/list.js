@@ -20,19 +20,19 @@ pagelet.on("scroll", function(){
 
   if(!loading_lock // 非加载中状态
     && nearBottom // 靠近底部
-    && $("[data-pagelet='layout.page.main.list']").length) // 列表才做
+    && $("[data-pagelet='layout.main.list']").length) // 列表才做
   {
     loading.show();
 
     loading_lock = true;
     pagelet.load({
       url : "/blog?page=" + (loaded_page + 1),
-      pagelets : ["layout.page.main.list"],
+      pagelets : ["layout.main.list"],
       replace : true,
       success : function(data, done){
         loaded_page++;
         loading_lock = false;
-        $(".cards-list").append(data.html["layout.page.main.list"]);
+        $(".cards-list").append(data.html["layout.main.list"]);
         loading.hide();
 
         done();

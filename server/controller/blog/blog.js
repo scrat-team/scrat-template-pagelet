@@ -35,6 +35,7 @@ router.get('/:id', function(req, res, next){
     }
   }
   if(data) {
+    data.name = data.title;
     res.locals.title = data.name;
     res.render('blog/blog', data);
   }else{

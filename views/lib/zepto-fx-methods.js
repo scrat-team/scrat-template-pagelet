@@ -73,19 +73,23 @@
 
     this.css({
       "left" : "50%",
-      "opacity" : 0
+      "opacity" : "0.3"
     });
     return anim(this, speed, {"left" : "0%", "opacity":1}, '1,1', callback)
   }
 
   $.fn.slideRight = function(speed, callback){
-      if (speed === undefined) speed = 0;
+    if (speed === undefined) speed = 0;
 
-      this.css({
-        "left" : "-50%",
-        "opacity" : 0
-      });
-      return anim(this, speed, {"left" : "0%", "opacity":1}, '1,1', callback)
-    }
+    this.css({
+      "left" : "-50%",
+      "opacity" : "0.3"
+    });
+    return anim(this, speed, {"left" : "0%", "opacity":1}, '1,1', callback)
+  }
+
+  $.fn.isShow = function(){
+    return this.css("display") != "none";
+  }
 
 })(Zepto)

@@ -10,7 +10,8 @@ module.exports = (function(){
       $dom.children().css({
         "position":"absolute",
         "width" : "100%",
-        "margin" : "0"
+        "margin" : "0",
+        "background-color" : "#efeff4"
       });
 
       $cache = $dom.children().clone().addClass("fake");
@@ -31,10 +32,10 @@ module.exports = (function(){
       }
 
       $children.css({
-        "position":"absolute"
+        "position":"absolute",
       });
 
-      $children[animation != "none" ? animation : "show"](400, function(){
+      $children[(animation && animation != "none") ? animation : "show"](400, function(){
         $children.css("position", "");
       });
     }
