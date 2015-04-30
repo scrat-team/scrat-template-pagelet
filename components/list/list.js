@@ -1,9 +1,16 @@
-require("../utils/img-lazyload/img-lazyload.js");
+var lazy = require("components/utils/img-lazyload/img-lazyload.js");
+var loading = require("components/loading/item");
+
+// 插入loading
+loading.append($(".index-list"));
 
 loading_lock = false;
 loaded_page = 1;
 
 pagelet.on("scroll", function(){
+  // 触发lazy load
+  lazy.trigger();
+
   var target = $(".page-content")[0];
   var total_height = target.scrollHeight
   var scroll_height = target.scrollTop
@@ -13,11 +20,11 @@ pagelet.on("scroll", function(){
 
   if(!loading_lock // 非加载中状态
     && nearBottom // 靠近底部
-    && history.state && !/[/]blog[/]/gi.test(history.state.url)) // 列表才做
+    && $("[data-pagelet='layout.page.main.list']").length) // 列表才做
   {
-    loading_lock = true;
-    $(".infinite-scroll-preloader").show();
+    loading.show();
 
+    loading_lock = true;
     pagelet.load({
       url : "/blog?page=" + (loaded_page + 1),
       pagelets : ["layout.page.main.list"],
@@ -26,7 +33,7 @@ pagelet.on("scroll", function(){
         loaded_page++;
         loading_lock = false;
         $(".cards-list").append(data.html["layout.page.main.list"]);
-        $(".infinite-scroll-preloader").hide();
+        loading.hide();
 
         done();
       }
