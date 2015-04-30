@@ -73,9 +73,9 @@
 
     this.css({
       "left" : "50%",
-      "opacity" : "0.3"
+      "opacity" : "0"
     });
-    return anim(this, speed, {"left" : "0%", "opacity":1}, '1,1', callback)
+    return anim(this, speed, {"left" : "0", "opacity":1}, null, callback)
   }
 
   $.fn.slideRight = function(speed, callback){
@@ -83,9 +83,9 @@
 
     this.css({
       "left" : "-50%",
-      "opacity" : "0.3"
+      "opacity" : "0"
     });
-    return anim(this, speed, {"left" : "0%", "opacity":1}, '1,1', callback)
+    return anim(this, speed, {"left" : "0", "opacity":1}, null, callback)
   }
 
   $.fn.isShow = function(){
