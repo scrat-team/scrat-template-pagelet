@@ -2,7 +2,7 @@ var lazyloadHandle = false;
 var trigger_range = 300;
 
 function trigger(){
-	lazyloadHandle && clearTimeout(lazyloadHandle)
+	lazyloadHandle && clearTimeout(lazyloadHandle);
 
 	lazyloadHandle = setTimeout(function(){
 		var scroll_height = document.body.scrollTop
