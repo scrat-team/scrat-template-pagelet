@@ -25,6 +25,8 @@ module.exports = (function(){
       if (!animation || animation=="none") {
         return;
       }
+      // 滚动到顶部
+      $(".page-content").scrollTop(0);
 
       var $children = $dom.children();
 
