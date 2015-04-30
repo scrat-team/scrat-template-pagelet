@@ -15,7 +15,7 @@ pagelet.on("scroll", function(){
   var total_height = target.scrollHeight
   var scroll_height = target.scrollTop
   var screen_height = window.innerHeight
-  var nearBottom = screen_height + scroll_height >= total_height - 50; //50换缓冲
+  var nearBottom = screen_height + scroll_height >= total_height - 20; //50换缓冲
 
 
   if(!loading_lock // 非加载中状态
@@ -28,7 +28,7 @@ pagelet.on("scroll", function(){
     pagelet.load({
       url : "/blog?page=" + (loaded_page + 1),
       pagelets : ["layout.main.list"],
-      replace : true,
+      replace : "append",
       success : function(data, done){
         loaded_page++;
         loading_lock = false;

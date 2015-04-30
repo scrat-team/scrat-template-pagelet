@@ -22,6 +22,10 @@ module.exports = (function(){
         return;
       }
 
+      if (!animation || animation=="none") {
+        return;
+      }
+
       var $children = $dom.children();
 
       if ($cache) {
@@ -35,7 +39,7 @@ module.exports = (function(){
         "position":"absolute",
       });
 
-      $children[(animation && animation != "none") ? animation : "show"](400, function(){
+      $children[animation != "none" ? animation : "show"](400, function(){
         $children.css("position", "");
       });
     }

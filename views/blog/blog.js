@@ -25,10 +25,10 @@ function getDomByPagelets(pagelets) {
 
 
 pagelet.on(pagelet.EVENT_LOAD_COMPLETED, function(opt){
+  dispatchScroll();
+
   // 页面loading隐藏
   pageLoading.hide();
-
-  dispatchScroll();
 });
 
 pagelet.on(pagelet.EVENT_BEFORE_LOAD, function(opt){
@@ -40,6 +40,10 @@ pagelet.on(pagelet.EVENT_BEFORE_LOAD, function(opt){
 
 
 pagelet.on(pagelet.EVENT_BEFORE_INSERT_HTML, function(param) {
+  if (!param.options.animation || param.options.animation == "none") {
+    return;
+  }
+
   var dom = getDomByPagelets(param.options.pagelets);
   if (dom) {
     // clone 当前页面，做假的页面展示
@@ -48,6 +52,10 @@ pagelet.on(pagelet.EVENT_BEFORE_INSERT_HTML, function(param) {
 });
 
 pagelet.on(pagelet.EVENT_AFTER_INSERT_HTML, function(param) {
+  if (!param.options.animation || param.options.animation == "none") {
+    return;
+  }
+
   var dom = getDomByPagelets(param.options.pagelets);
   if (dom) {
     pageTransition.start(dom, param.options.animation);
