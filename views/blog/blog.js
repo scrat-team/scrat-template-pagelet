@@ -17,7 +17,7 @@ function getDomByPagelets(pagelets) {
   }
 
   if (pagelets && pagelets.length == 1) {
-    return $("[data-pagelet-id='" + pagelets[0] + "']");
+    return $("[data-pagelet='" + pagelets[0] + "']");
   }
   return null;
 }

@@ -5,7 +5,9 @@
     {% require $id='list' %}
   </div>
 {% elseif id %}
-  {% require $id='detail' %}
+  <div class="index-list">
+    {% require $id='detail' %}
+  </div>
 {% endif %}
 
 {% script %}

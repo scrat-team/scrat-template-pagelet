@@ -5,7 +5,7 @@
             <div class="page navbar-fixed navbar-through">
                 {% require $id='header' %}
 
-                {% pagelet $id="main" class="page-content index-main"  data-pagelet-id="layout.main"%}
+                {% pagelet $id="main" class="page-content index-main"%}
                     {% require $id='main' %}
                 {% endpagelet %}
 

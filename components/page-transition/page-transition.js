@@ -9,8 +9,8 @@ module.exports = (function(){
 
       $dom.children().css({
         "position":"absolute",
-        "width" : "100%",
-        "margin" : "0",
+        //"width" : "100%",
+        //"margin" : "0",
         "background-color" : "#efeff4"
       });
 
@@ -25,7 +25,7 @@ module.exports = (function(){
       var $children = $dom.children();
 
       if ($cache) {
-        $cache.prependTo($dom).fadeOut(500, function(){
+        $cache.prependTo($dom).fadeOut(200, function(){
           $(this).remove();
         });
         $cache = null;
