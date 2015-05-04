@@ -1,11 +1,11 @@
 {% if page404 %}
   {% require $id='404' %}
 {% elseif list %}
-  <div class="index-list">
+  <div class="page index-list">
     {% require $id='list' %}
   </div>
 {% elseif id %}
-  <div class="index-list">
+  <div class="page index-list">
     {% require $id='detail' %}
   </div>
 {% endif %}
