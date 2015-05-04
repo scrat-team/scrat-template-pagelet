@@ -45,8 +45,7 @@ var middleware = {
     },
     router: {
         index: '/index'
-    },
-    render: {}
+    }
 };
 for (var key in middleware) {
     if (middleware.hasOwnProperty(key)) {
@@ -62,7 +61,6 @@ app.use('/public', middleware.static, middleware.error);
 // app.use('/api/*', middleware.proxy);
 app.use(middleware.engine);
 app.use(middleware.router);
-//app.use('/:page', middleware.render);
 app.use(middleware.error);
 
 if (require.main === module) {
