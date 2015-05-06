@@ -16,13 +16,14 @@ app.port = process.env['PORT'] || 5000;
 app.logger = console;
 app.root = root;
 
-app.use(require('koa-accesslog')());
-
 process.on('uncaughtException', function (err) {
   (app.logger || console).error('Uncaught exception:\n', err.stack);
 });
 
 var middleware = {
+  accesslog: {
+
+  },
   combo: {
     root: root + '/public',
     cache: PROD && {maxAge: 1000 * 60 * 60 * 24}
@@ -65,6 +66,7 @@ for (var key in middleware) {
 app.use(mount('/co', middleware.combo));
 //app.use('/public', middleware.static, middleware.error);
 app.use(mount('/public', middleware.static));
+app.use(middleware.accesslog);
 //// app.use('/api/*', middleware.proxy);
 app.use(middleware.engine);
 //app.use(middleware.router.routes());
