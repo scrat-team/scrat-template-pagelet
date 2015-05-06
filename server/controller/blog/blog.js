@@ -46,8 +46,11 @@ router.get('/blog/:id', function *blogDetail(next){
 });
 
 router.get('/blog/img/:id', function *blogImgProxy(next){
-  var url = 'http://pic' + (Math.floor(Math.random()*10) % 3 +1) + '.zhimg.com/' + this.params.id;
+  var host = 'pic' + (Math.floor(Math.random()*10) % 3 +1) + '.zhimg.com';
+  var url = 'http://' + host + '/' + this.params.id;
   this.body = request({
     url: url
   });
 });
+
+
