@@ -1,48 +1,53 @@
+var path = require('path');
 var engine = require('scrat-swig');
-var render = require('koa-swig');
-var swig = render.swig;
+var merge = require('merge');
 
 module.exports = function (options, app, PROD) {
-  //scrat-swig tags
-  options.tags = options.tags || {};
-  var tagList = ['body', 'head', 'html', 'pagelet', 'require', 'script', 'uri', 'title', 'datalet'];
-  tagList.forEach(function(item){
-    options.tags[item] = require('scrat-swig/tags/' + item);
-  });
+  options.ext = options.ext || 'tpl';
 
-  var Resource = require('scrat-swig/lib/resource');
-  Resource.setRoot(options.scrat.root || process.cwd());
-  if(typeof options.scrat.comboURI === 'function'){
-    Resource.prototype.comboURI = options.scrat.comboURI;
+  if(options.swig){
+    engine.setDefaults(options.swig);
   }
-  if(options.scrat.logger){
-    Resource.setLogger(options.scrat.logger);
-  }
-  var map = options.scrat.cacheMap ? Resource.loadOptions(options.scrat.map) : options.scrat.map;
-  options.extensions = options.extensions || {};
-  options.extensions['Resource'] = Resource;
-  options.extensions['_map'] = map;
 
-  app.context.render = render({
-    root: options.root,
-    ext: options.ext,
-    filters: options.filters,
-    tags: options.tags,
-    extensions: options.extensions
-  });
+  engine.middleware(options.scrat);
 
-  if (options.swig) {
-    swig.setDefaults(options.swig);
+  function renderFile(pathName, locals) {
+    return function (done) {
+      engine.renderFile(pathName, locals, done);
+    };
   }
+
+  app.context.render = function *render(view, locals){
+    // default extname
+    var ext = path.extname(view);
+
+    if (!ext) {
+      ext = '.' + options.ext;
+      view += ext;
+    }
+
+    // resolve
+    view = path.resolve(options.root, view);
+
+    var data = merge({flash: this.flash}, this.state, locals);
+
+    var html = yield renderFile(view, data);
+    if (!options.custom) {
+      this.body = html;
+    }
+    return html;
+  };
 
   return function *swigMiddleware(next){
-    var pagelets = this.header['X-Pagelets'];
+    var pagelets = this.get('X-Pagelets');
     if(pagelets){
       this.set('Content-Type', 'application/json');
       //this.set('Cache-Control', 'no-cache, no-store');
       //this.set('Pragma', 'no-cache');
       //this.set('Expires', 0);
+
       this.state._pagelets = pagelets;
+      console.log(this.state)
     }
     yield next;
   };
