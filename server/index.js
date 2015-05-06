@@ -63,6 +63,7 @@ for (var key in middleware) {
 }
 
 //app.use(compress()); //Use gzip in nginx, instead of in nodejs.
+app.use(require('koa-conditional-get')());
 app.use(require('koa-etag')());
 app.use(mount('/co', middleware.combo));
 //app.use('/public', middleware.static, middleware.error);

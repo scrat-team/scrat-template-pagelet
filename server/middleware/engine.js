@@ -47,7 +47,6 @@ module.exports = function (options, app, PROD) {
       //this.set('Expires', 0);
 
       this.state._pagelets = pagelets;
-      console.log(this.state)
     }
     yield next;
   };
