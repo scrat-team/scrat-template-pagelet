@@ -1,4 +1,4 @@
 web: node server/cluster
 
 engines:
-  node: '0.10'
+  node: "iojs-v2.0.0"

@@ -7,6 +7,13 @@ var app = module.exports = koa();
 
 var meta = require('../package.json');
 var root = path.resolve(__dirname, '../').replace(/\/+$/, '');
+
+//set env for uae
+if(process.env['UAE_MODE'] === 'PROD'){
+  app.env = 'production';
+}else if(process.env['UAE_MODE'] === 'DEV'){
+  app.env = 'development';
+}
 var PROD = (app.env || '').toLocaleLowerCase() === 'production';
 
 app.name = meta.name;

@@ -18,7 +18,6 @@ module.exports = function (options, app, PROD) {
   return function *comboMiddleware(next) {
     var self = this;
     var m = this.originalUrl.match(regex);
-    console.log(cached.length, cached.keys())
     if (m && m[1]) {
       var url = m[1];
       var prefix = m[2] || '';
@@ -42,7 +41,9 @@ module.exports = function (options, app, PROD) {
             if(!content) {
               try {
                 content = content || fs.readFileSync(realPath, 'utf-8');
-                cached.set(realPath, content);
+                if(cached){
+                  cached.set(realPath, content);
+                }
               } catch (err) {
                 self.throw('[combo] ' + err.code + ': ' + (err.path && err.path.replace(root + '/', '')), 400, {
                   url: self.originalUrl,
