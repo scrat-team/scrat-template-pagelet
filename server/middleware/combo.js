@@ -1,59 +1,73 @@
-'use strict';
+var path = require('path');
+var fs = require('fs');
+var merge = require('merge');
 
-var path = require('path'),
-    fs = require('fs');
-
-// check if the filepath is potentially malicious
-function isMalicious(filepath) {
-    var ext = path.extname(filepath);
-    return ext !== '.css' && ext !== '.js' || filepath.indexOf('../') !== -1;
-}
-
+//provide combo middleware: /co??f1,f2;/prefix&hash
 module.exports = function (options, app, PROD) {
-    var root = options.root,
-        useCache = options.cache,
-        logger = app.get('logger') || console,
-        lastHash, cached = {};
-    return function (req, res) {
-        var i = req.originalUrl.indexOf('??'),
-            j = req.originalUrl.indexOf('&'),
-            url, ext, hash, files, contents = [], rs;
-        if (~i) {
-            url = ~j ? req.originalUrl.slice(i + 2, j) : req.originalUrl.slice(i + 2);
-            ext = path.extname(url);
-            if (ext) res.type(ext.slice(1));
-            if (~j) hash = req.originalUrl.slice(j + 1);
-            if (hash !== lastHash) {
-                lastHash = hash;
-                cached = {};
+  var regex = /^[^?]*\?\?([^;&]*);?([^&]*)&?(.*)$/;
+  var root = options.root;
+
+  var cached;
+  if (options.cache) {
+    cached = require("lru-cache")(merge({
+      max: 300,
+      maxAge: 1000 * 60 * 60
+    }, options.cache));
+  }
+
+  return function *comboMiddleware(next) {
+    var self = this;
+    var m = this.originalUrl.match(regex);
+    console.log(cached.length, cached.keys())
+    if (m && m[1]) {
+      var url = m[1];
+      var prefix = m[2] || '';
+      //var hash = m[3] || '';
+
+      if (prefix.indexOf('../') !== -1) {
+        self.throw('[combo] malicious prefix: ' + prefix, 400, {url: self.originalUrl});
+      } else {
+        var basePath = path.join(root, prefix.replace(/^\//, ''));
+        var files = url && url.split(',');
+        var contents = files.map(function (file) {
+          //only allow css/js
+          var ext = path.extname(file);
+          if (ext !== '.css' && ext !== '.js' || file.indexOf('../') !== -1) {
+            self.throw('[combo] malicious file: ' + file, 400, {url: self.originalUrl});
+          } else {
+            var realPath = path.resolve(basePath, file);
+            //check cached
+            var content = cached && cached.get(realPath);
+            //read from filesystem
+            if(!content) {
+              try {
+                content = content || fs.readFileSync(realPath, 'utf-8');
+                cached.set(realPath, content);
+              } catch (err) {
+                self.throw('[combo] ' + err.code + ': ' + (err.path && err.path.replace(root + '/', '')), 400, {
+                  url: self.originalUrl,
+                  error: err
+                });
+              }
             }
-            res.setHeader('Cache-Control', 'public, max-age=' + (PROD ? 60 * 60 * 24 * 365 : 0));
-            files = url.split(',');
-            files.forEach(function (file) {
-                if(useCache && cached.hasOwnProperty(file)){
-                    contents.push(cached[file]);
-                } else if(isMalicious(file)){
-                    logger.error('[combo] malicious file: ' + file);
-                } else {
-                    var filePath = path.resolve(root, file), content;
-                    try {
-                        content = fs.readFileSync(filePath, 'utf-8');
-                        contents.push(content);
-                        if(useCache){
-                            cached[file] = content;
-                        }
-                    } catch (e) {
-                        logger.error('[combo] cannot read file: ' + filePath + '\n', e.stack);
-                    }
-                }
-            });
-            rs = contents.join('\n');
-            if (contents.length !== files.length) {
-                logger.error('[combo] some files not found');
-            }
-            res.send(rs);
+            return content;
+          }
+        });
+
+        if (contents.length !== files.length) {
+          self.throw('[combo] some file not found', 400, {url: self.originalUrl});
         } else {
-            res.send('I am a combo service :)');
+          //set headers
+          var ext = path.extname(url);
+          if (ext) {
+            self.type = ext.slice(1);
+          }
+          self.set('Cache-Control', 'public,max-age=' + (PROD ? 60 * 60 * 24 * 365 : 0));
+          self.body = contents.join('\n');
         }
-    };
+      }
+    } else {
+      self.throw('I am a combo service, Usage: /co??f1,f2;/prefix&hash', 400, {url: self.originalUrl});
+    }
+  }
 };

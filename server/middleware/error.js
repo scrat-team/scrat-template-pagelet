@@ -1,6 +1,3 @@
-/* jshint unused: false */
-'use strict';
-
 var errorHandler = require('errorhandler'),
     app = require('../index');
 

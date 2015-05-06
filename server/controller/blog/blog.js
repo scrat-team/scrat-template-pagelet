@@ -1,8 +1,5 @@
-'use strict';
-
-var express = require('express');
-var router = express.Router();
-var request = require('request');
+var router = require('koa-router')();
+var request = require('co-request');
 
 var testData = require('./test-data.json');
 var listData = JSON.parse(JSON.stringify(testData)).map(function(item){
@@ -14,38 +11,42 @@ var listData = JSON.parse(JSON.stringify(testData)).map(function(item){
 
 module.exports = router;
 
-router.get('/', function(req, res, next){
-  var offset = (req.query.page || 0) * 10;
+
+//router.prefix('/blog');
+
+router.get('/', function *blogList(next){
+  var offset = (this.query.page || 0) * 10;
   var data = {
     name: '最美应用 | 有价值的好应用',
     list: listData.slice(offset, offset + 10)
   };
-  res.locals.title = data.name;
-  res.render('blog/blog', data);
+  this.state.title = data.name;
+  yield this.render('layout/layout', data);
 });
+//
+//router.get('/:id', function *blogDetail(next){
+//  var id = req.params.id;
+//  var data;
+//  for(var i = 0,len=testData.length; i<len; i++){
+//    if(testData[i].id == id){
+//      data = testData[i];
+//      data.name = data.title;
+//      break;
+//    }
+//  }
+//  if(data) {
+//    data.name = data.title;
+//    this.state.title = data.name;
+//    this.render('blog/blog', data);
+//  }else{
+//    this.state.title = '最美应用 | 有价值的好应用';
+//    this.status = 404;
+//    this.body = 'No Found blog id=' + id;
+//  }
+//});
 
-router.get('/:id', function(req, res, next){
-  var id = req.params.id;
-  var data;
-  for(var i = 0,len=testData.length; i<len; i++){
-    if(testData[i].id == id){
-      data = testData[i];
-      data.name = data.title;
-      break;
-    }
-  }
-  if(data) {
-    data.name = data.title;
-    res.locals.title = data.name;
-    res.render('blog/blog', data);
-  }else{
-    res.locals.title = '最美应用 | 有价值的好应用';
-    res.status(404).send('No Found blog id=' + id);
-  }
-});
-
-router.get('/img/:id', function(req, res, next){
-  request({
-    url: 'http://pic' + (Math.floor(Math.random()*10) % 3 +1) + '.zhimg.com/' + req.params.id
-  }).pipe(res);
-});
+//router.get('/img/:id', function *blogImgProxy(next){
+//  request({
+//    url: 'http://pic' + (Math.floor(Math.random()*10) % 3 +1) + '.zhimg.com/' + req.params.id
+//  }).pipe(res);
+//});

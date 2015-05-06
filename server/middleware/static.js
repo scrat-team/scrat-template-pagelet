@@ -1,8 +1,9 @@
-'use strict';
+var serve = require('koa-static');
 
-var express = require('express');
 module.exports = function (options, app, PROD) {
-    var root = options.root;
-    delete options.root;
-    return express.static(root, options);
+  var root = options.root;
+  delete options.root;
+  return serve(root, {
+    maxAge: PROD ? Infinity : 0
+  });
 };
