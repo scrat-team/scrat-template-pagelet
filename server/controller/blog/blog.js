@@ -1,5 +1,5 @@
 var router = require('koa-router')();
-var request = require('co-request');
+var request = require('request');
 
 var testData = require('./test-data.json');
 var listData = JSON.parse(JSON.stringify(testData)).map(function(item){
@@ -14,7 +14,7 @@ module.exports = router;
 
 //router.prefix('/blog');
 
-router.get('/', function *blogList(next){
+router.get('/blog', function *blogList(next){
   var offset = (this.query.page || 0) * 10;
   var data = {
     name: '最美应用 | 有价值的好应用',
@@ -24,7 +24,7 @@ router.get('/', function *blogList(next){
   yield this.render('blog/blog', data);
 });
 
-router.get('/:id', function *blogDetail(next){
+router.get('/blog/:id', function *blogDetail(next){
   var id = this.params.id;
   var data;
   for(var i = 0,len = testData.length; i < len; i++){
@@ -37,7 +37,7 @@ router.get('/:id', function *blogDetail(next){
   if(data) {
     data.name = data.title;
     this.state.title = data.name;
-    this.render('blog/blog', data);
+    yield this.render('blog/blog', data);
   }else{
     this.state.title = '最美应用 | 有价值的好应用';
     this.status = 404;
@@ -45,8 +45,9 @@ router.get('/:id', function *blogDetail(next){
   }
 });
 
-router.get('/img/:id', function *blogImgProxy(next){
-  request({
-    url: 'http://pic' + (Math.floor(Math.random()*10) % 3 +1) + '.zhimg.com/' + req.params.id
-  }).pipe(res);
+router.get('/blog/img/:id', function *blogImgProxy(next){
+  var url = 'http://pic' + (Math.floor(Math.random()*10) % 3 +1) + '.zhimg.com/' + this.params.id;
+  this.body = request({
+    url: url
+  });
 });
