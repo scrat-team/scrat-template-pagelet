@@ -2,6 +2,8 @@ var mount = require('koa-mount');
 var router = require('koa-router')();
 
 module.exports = function (options, app, PROD) {
+
+  //require('../controller/blog/blog')(router)
   return router;
 };
 

@@ -2,7 +2,7 @@ var path = require('path');
 var engine = require('scrat-swig');
 var merge = require('merge');
 
-module.exports = function (options, app, PROD) {
+module.exports = function (options) {
   options.ext = options.ext || 'tpl';
 
   if(options.swig){
@@ -17,7 +17,7 @@ module.exports = function (options, app, PROD) {
     };
   }
 
-  app.context.render = function *render(view, locals){
+  function *render(view, locals){
     // default extname
     var ext = path.extname(view);
 
@@ -36,7 +36,7 @@ module.exports = function (options, app, PROD) {
       this.body = html;
     }
     return html;
-  };
+  }
 
   return function *swigMiddleware(next){
     var pagelets = this.get('X-Pagelets');
@@ -48,6 +48,7 @@ module.exports = function (options, app, PROD) {
 
       this.state._pagelets = pagelets;
     }
+    this.render = render;
     yield next;
   };
 };

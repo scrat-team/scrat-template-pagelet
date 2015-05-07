@@ -1,5 +1,5 @@
 var accesslog = require('koa-accesslog');
 
-module.exports = function (options, app, PROD) {
-  return accesslog();
+module.exports = function (options) {
+  return accesslog(options.stream);
 };

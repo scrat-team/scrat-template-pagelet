@@ -1,16 +1,16 @@
-var errorHandler = require('errorhandler'),
-    app = require('../index');
+module.exports = function (options) {
+  return function *errorMiddleware(next) {
+    var self = this;
+    try {
+      yield next;
+    } catch (err) {
+      // some errors will have .status, however this is not a guarantee
+      self.status = err.status || 500;
+      self.type = 'html';
+      self.body = options.stack ? err.stack : err.message;
 
-module.exports = function () {
-    var logger = app.get('logger') || console;
-    return app.get('env') === 'production' ?
-        function (err, req, res, next) {
-            var msg = err.stack;
-            if (err.mod) msg = '[' + err.mod + '] ' + msg;
-            logger.error(msg);
-
-            if (err.status) res.statusCode = err.status;
-            if (res.statusCode < 400) res.statusCode = 500;
-            res.end();
-        } : errorHandler();
+      // since we handled this manually, we'll want to delegate to the regular app level error handling as well, so that centralized still functions correctly.
+      self.app.emit('error', err, self);
+    }
+  }
 };

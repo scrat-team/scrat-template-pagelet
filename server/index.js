@@ -29,16 +29,18 @@ process.on('uncaughtException', function (err) {
 
 var middleware = {
   accesslog: {
-
   },
+
   combo: {
     root: root + '/public',
-    cache: PROD && {maxAge: 1000 * 60 * 60 * 24}
+    cache: PROD,
+    maxAge: PROD ? 60 * 60 * 24 * 365 : 0
   },
+
   //proxy: {
   //  target: 'http://cors-api-host'
   //},
-  static: {
+  'static': {
     root: root + '/public',
     maxAge: PROD ? Infinity : 0
   },
@@ -51,11 +53,16 @@ var middleware = {
       cacheMap: PROD,
       logger: console
     },
+
     swig: {
       cache: PROD ? 'memory' : false
     }
   },
-  //error: {},
+
+  error: {
+    stack: !PROD
+  },
+
   router: {
   }
 };
@@ -63,19 +70,19 @@ var middleware = {
 for (var key in middleware) {
   if (middleware.hasOwnProperty(key)) {
     Object.defineProperty(middleware, key, {
-      value: require('./middleware/' + key)(middleware[key], app, PROD),
+      value: require('./middleware/' + key)(middleware[key]),
       enumerable: true
     });
   }
 }
 
-//app.use(compress()); //Use gzip in nginx, instead of in nodejs.
+
+//app.use(require('koa-compress')()); //Use gzip in nginx, instead of in nodejs.
+app.use(middleware.accesslog);
 app.use(require('koa-conditional-get')());
 app.use(require('koa-etag')());
 app.use(mount('/co', middleware.combo));
-//app.use('/public', middleware.static, middleware.error);
 app.use(mount('/public', middleware.static));
-app.use(middleware.accesslog);
 //// app.use('/api/*', middleware.proxy);
 app.use(middleware.engine);
 //app.use(middleware.router.routes());
@@ -89,7 +96,13 @@ app.use(require('./controller/blog/blog').routes())
 //}
 
 //middleware.router.mount(app);
-//app.use(middleware.error);
+app.use(middleware.error);
+
+app.on('error', function(err, ctx){
+  if (app.env.toLowerCase() !== 'test') {
+    console.error(err, ctx);
+  }
+});
 
 if (require.main === module) {
   app.listen(app.port, function () {

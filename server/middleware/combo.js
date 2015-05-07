@@ -3,16 +3,17 @@ var fs = require('fs');
 var merge = require('merge');
 
 //provide combo middleware: /co??f1,f2;/prefix&hash
-module.exports = function (options, app, PROD) {
+module.exports = function (options) {
   var regex = /^[^?]*\?\?([^;&]*);?([^&]*)&?(.*)$/;
   var root = options.root;
+  options.maxAge = options.maxAge || 0;
 
   var cached;
   if (options.cache) {
     cached = require("lru-cache")(merge({
       max: 300,
-      maxAge: 1000 * 60 * 60
-    }, options.cache));
+      maxAge: 1000 * 60 * 60 * 24
+    }, options.cacheOptions || {}));
   }
 
   return function *comboMiddleware(next) {
@@ -63,7 +64,7 @@ module.exports = function (options, app, PROD) {
           if (ext) {
             self.type = ext.slice(1);
           }
-          self.set('Cache-Control', 'public,max-age=' + (PROD ? 60 * 60 * 24 * 365 : 0));
+          self.set('Cache-Control', 'public,max-age=' + options.maxAge);
           self.body = contents.join('\n');
         }
       }
