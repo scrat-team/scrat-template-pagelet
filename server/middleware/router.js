@@ -1,19 +1,22 @@
-var mount = require('koa-mount');
-var router = require('koa-router')();
+module.exports = function (options, app) {
+  var emptyFn = function *(next) {
+    yield next;
+  };
 
-module.exports = function (options, app, PROD) {
+  var mountRouter = function(instance){
+    if(typeof instance === 'string'){
+      instance = require(instance);
+    }
+    app.use(instance.routes());
+  };
 
-  //require('../controller/blog/blog')(router)
-  return router;
+  return function mountRouters() {
+    //sugar method app.get/post/...
+    require('koa-router')(app);
+
+    //mount routers
+    mountRouter('../controller/blog/blog');
+
+    return emptyFn;
+  };
 };
-
-router.all('/', function *(next) {
-  this.body = 'abbb';
-});
-
-
-router.use(mount('/blog', function*(){
-  this.body = 'blog'
-  console.log('xx')
-}))
-//router.use('/blog', require('../controller/blog/blog').routes());

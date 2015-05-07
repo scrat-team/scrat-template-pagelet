@@ -37,9 +37,6 @@ var middleware = {
     maxAge: PROD ? 60 * 60 * 24 * 365 : 0
   },
 
-  //proxy: {
-  //  target: 'http://cors-api-host'
-  //},
   'static': {
     root: root + '/public',
     maxAge: PROD ? Infinity : 0
@@ -70,32 +67,20 @@ var middleware = {
 for (var key in middleware) {
   if (middleware.hasOwnProperty(key)) {
     Object.defineProperty(middleware, key, {
-      value: require('./middleware/' + key)(middleware[key]),
+      value: require('./middleware/' + key)(middleware[key], app),
       enumerable: true
     });
   }
 }
 
-
 //app.use(require('koa-compress')()); //Use gzip in nginx, instead of in nodejs.
-app.use(middleware.accesslog);
 app.use(require('koa-conditional-get')());
 app.use(require('koa-etag')());
 app.use(mount('/co', middleware.combo));
 app.use(mount('/public', middleware.static));
-//// app.use('/api/*', middleware.proxy);
+app.use(middleware.accesslog);
 app.use(middleware.engine);
-//app.use(middleware.router.routes());
-
-app.use(require('./controller/blog/blog').routes())
-//for (var mountPath in middleware.router){
-//  if(middleware.router.hasOwnProperty(mountPath)){
-//    var router = middleware.router[mountPath];
-//    app.use(mount(mountPath, router));
-//  }
-//}
-
-//middleware.router.mount(app);
+app.use(middleware.router());
 app.use(middleware.error);
 
 app.on('error', function(err, ctx){

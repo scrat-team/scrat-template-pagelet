@@ -1,6 +1,5 @@
-var router = require('koa-router')();
-var request = require('request');
 
+var request = require('request');
 var testData = require('./test-data.json');
 var listData = JSON.parse(JSON.stringify(testData)).map(function(item){
   item.name = item.title;
@@ -9,12 +8,10 @@ var listData = JSON.parse(JSON.stringify(testData)).map(function(item){
   return item;
 });
 
-module.exports = router;
+var router = module.exports = require('koa-router')();
 
-
-//router.prefix('/blog');
-
-router.get('/blog', function *blogList(next){
+router.prefix('/blog');
+router.get('/', function *blogList(next){
   var offset = (this.query.page || 0) * 10;
   var data = {
     name: '最美应用 | 有价值的好应用',
@@ -24,7 +21,7 @@ router.get('/blog', function *blogList(next){
   yield this.render('blog/blog', data);
 });
 
-router.get('/blog/:id', function *blogDetail(next){
+router.get('/:id', function *blogDetail(next){
   var id = this.params.id;
   var data;
   for(var i = 0,len = testData.length; i < len; i++){
@@ -45,12 +42,16 @@ router.get('/blog/:id', function *blogDetail(next){
   }
 });
 
-router.get('/blog/img/:id', function *blogImgProxy(next){
+router.get('/img/:id', function *blogImgProxy(next){
   var host = 'pic' + (Math.floor(Math.random()*10) % 3 +1) + '.zhimg.com';
   var url = 'http://' + host + '/' + this.params.id;
   this.body = request({
     url: url
   });
 });
+
+
+
+
 
 
