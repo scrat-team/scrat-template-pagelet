@@ -61,6 +61,10 @@ var middleware = {
   },
 
   router: {
+  },
+
+  mock: {
+    root: root + '/server/mocks'
   }
 };
 
@@ -80,6 +84,9 @@ app.use(mount('/co', middleware.combo));
 app.use(mount('/public', middleware.static));
 app.use(middleware.accesslog);
 app.use(middleware.engine);
+if(!PROD){
+  app.use(middleware.mock);
+}
 app.use(middleware.router());
 app.use(middleware.error);
 
