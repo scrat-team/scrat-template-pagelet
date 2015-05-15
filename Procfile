@@ -1,4 +1,4 @@
-web: node server/cluster
+web: npm start
 
 engines:
-  node: "iojs-v2.0.0"
+  node: '0.12.2'

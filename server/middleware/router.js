@@ -1,22 +1,76 @@
+var fs = require('fs');
+var path = require('path');
+var Router = require('koa-router');
+var mount = require('koa-mount');
+var logger = require('log4js').getLogger('router');
+
 module.exports = function (options, app) {
-  var emptyFn = function *(next) {
-    yield next;
-  };
-
-  var mountRouter = function(instance){
-    if(typeof instance === 'string'){
-      instance = require(instance);
-    }
-    app.use(instance.routes());
-  };
-
   return function mountRouters() {
     //sugar method app.get/post/...
     require('koa-router')(app);
 
-    //mount routers
-    mountRouter('../controller/blog/blog');
+    //auto mount controllers
+    autoMount(app, options.root, options.deep || 2);
 
-    return emptyFn;
+    return function *(next) {
+      yield next;
+    };
   };
 };
+
+/**
+ * 自动 mount controller
+ */
+function autoMount(app, root, deep) {
+  walkDir(root, null, deep).forEach(function (item) {
+    var relative = path.relative(root, item);
+    var instance = require(item);
+    var mountPath = instance.mountPath;
+    if(!mountPath){
+      var dirName = path.dirname(relative);
+      var baseName = path.basename(relative, '.js');
+      if(dirName === '.'){
+        mountPath = '/' + baseName;
+      }else{
+        mountPath = '/' + dirName;
+      }
+    }
+
+    if (instance) {
+      if (instance instanceof Router) {
+        //when koa-router
+        if (!instance.opts.prefix) {
+          instance.prefix(mountPath);
+        }
+        app.use(instance.routes());
+        logger.debug('mount %s from /controller/%s', instance.opts.prefix, relative);
+      }else if(instance.constructor.name === 'GeneratorFunction') {
+        //when middleware
+        app.use(mount(mountPath, instance));
+        logger.debug('mount %s from /controller/%s', mountPath, relative);
+      }else{
+        logger.warn('controller\'s module.exports requires to be a generator function, at %s', relative);
+      }
+    }else{
+      logger.warn('controller have not module.exports, at %s', relative);
+    }
+  });
+}
+
+/**
+ * 遍历 controller 目录, 找到所有主文件
+ */
+function walkDir(root, parent, deep) {
+  var result = [];
+  var files = fs.readdirSync(root);
+  files.forEach(function (file) {
+    var fullPath = path.join(root, file);
+    var stat = fs.statSync(fullPath);
+    if (deep > 0 && stat.isDirectory()) {
+      result = result.concat(walkDir(fullPath, file, deep - 1));
+    } else if (!parent || file === parent + '.js') {
+      result.push(fullPath);
+    }
+  });
+  return result;
+}

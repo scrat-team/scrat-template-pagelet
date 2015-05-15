@@ -1,5 +1,3 @@
-'use strict';
-
 var path = require('path');
 var koa = require('koa');
 var mount = require('koa-mount');
@@ -9,10 +7,12 @@ var meta = require('../package.json');
 var root = path.resolve(__dirname, '../').replace(/\/+$/, '');
 
 //set env for uae
-if(process.env['UAE_MODE'] === 'PROD'){
-  app.env = 'production';
-}else if(process.env['UAE_MODE'] === 'DEV'){
-  app.env = 'development';
+if(!app.env) {
+  if (process.env['UAE_MODE'] === 'PROD') {
+    app.env = 'production';
+  } else if (process.env['UAE_MODE'] === 'DEV') {
+    app.env = 'development';
+  }
 }
 var PROD = (app.env || '').toLocaleLowerCase() === 'production';
 
@@ -20,7 +20,7 @@ app.name = meta.name;
 app.proxy = true;
 app.meta = meta;
 app.port = process.env['PORT'] || 5000;
-app.logger = console;
+app.logger = require('./utils/logger').getLogger();
 app.root = root;
 
 process.on('uncaughtException', function (err) {
@@ -29,6 +29,9 @@ process.on('uncaughtException', function (err) {
 
 var middleware = {
   accesslog: {
+    useFile: PROD,
+    root: root + '/private/log',
+    maxCount: 7
   },
 
   combo: {
@@ -50,9 +53,9 @@ var middleware = {
       cacheMap: PROD,
       logger: console
     },
-
     swig: {
-      cache: PROD ? 'memory' : false
+      cache: PROD ? 'memory' : false,
+      filters: require('./filter/filters.js')
     }
   },
 
@@ -61,6 +64,7 @@ var middleware = {
   },
 
   router: {
+    root: root + '/server/controller'
   },
 
   mock: {
@@ -76,10 +80,12 @@ for (var key in middleware) {
     });
   }
 }
+require("./filter/filters");
 
 //app.use(require('koa-compress')()); //Use gzip in nginx, instead of in nodejs.
 app.use(require('koa-conditional-get')());
 app.use(require('koa-etag')());
+//app.use(require('koa-favicon')(root + '/views/layout/favicon.ico'));
 app.use(mount('/co', middleware.combo));
 app.use(mount('/public', middleware.static));
 app.use(middleware.accesslog);
@@ -88,16 +94,16 @@ if(!PROD){
   app.use(middleware.mock);
 }
 app.use(middleware.router());
-app.use(middleware.error);
+//app.use(middleware.error);
 
-app.on('error', function(err, ctx){
-  if (app.env.toLowerCase() !== 'test') {
-    console.error(err, ctx);
-  }
-});
+//app.on('error', function(err, ctx){
+//  if (app.env.toLowerCase() !== 'test') {
+//    console.error(err, ctx);
+//  }
+//});
 
 if (require.main === module) {
   app.listen(app.port, function () {
-    console.log('[%s] %s server listening on port %d', app.env.toUpperCase(), app.name, app.port);
+    app.logger.info('[%s] %s server listening on port %d', app.env.toUpperCase(), app.name, app.port);
   });
 }
