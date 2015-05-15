@@ -5,7 +5,7 @@ module.exports = log4js;
 log4js.configure({
   replaceConsole: true,
   appenders: [
-    { type: 'console'}
+    { type: 'console', layout: process.env.NODE_ENV === 'production' && { type: "basic" }}
   ],
   levels: {
     "[all]": "INFO",
